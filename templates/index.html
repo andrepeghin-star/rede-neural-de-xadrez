@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧠 Rede Neural de Xadrez - Evolução em Tempo Real</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧠 Rede Neural de Xadrez</h1>
+            <p>Observar a Evolução das IAs em Tempo Real</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Painel de Controle -->
+            <section class="control-panel">
+                <h2>⚙️ Controles</h2>
+                <div class="controls">
+                    <button id="startBtn" class="btn btn-primary">▶️ Iniciar</button>
+                    <button id="pauseBtn" class="btn btn-warning" disabled>⏸️ Pausar</button>
+                    <button id="resetBtn" class="btn btn-danger">🔄 Reiniciar</button>
+                </div>
+
+                <div class="speed-control">
+                    <label for="speedSlider">Velocidade: <span id="speedValue">1.0</span>x</label>
+                    <input type="range" id="speedSlider" min="0.5" max="5" step="0.5" value="1">
+                </div>
+            </section>
+
+            <!-- Tabuleiro de Xadrez -->
+            <section class="board-section">
+                <h2>♟️ Tabuleiro Atual</h2>
+                <div id="chessboard" class="chessboard"></div>
+            </section>
+
+            <!-- Estatísticas -->
+            <section class="stats-section">
+                <h2>📊 Estatísticas</h2>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <h3>Geração</h3>
+                        <p id="generation" class="stat-value">0</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Total de Jogos</h3>
+                        <p id="totalGames" class="stat-value">0</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Brancas Ganhou</h3>
+                        <p id="whiteWins" class="stat-value">0</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Pretas Ganhou</h3>
+                        <p id="blackWins" class="stat-value">0</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Empates</h3>
+                        <p id="draws" class="stat-value">0</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Taxa de Vitória</h3>
+                        <p id="winRate" class="stat-value">0%</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Ratings Elo -->
+            <section class="rating-section">
+                <h2>🏆 Ratings Elo</h2>
+                <div class="rating-display">
+                    <div class="rating-box white">
+                        <h3>♔ Brancas</h3>
+                        <p id="whiteRating" class="rating">1000</p>
+                    </div>
+                    <div class="rating-box black">
+                        <h3>♚ Pretas</h3>
+                        <p id="blackRating" class="rating">1000</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gráficos -->
+            <section class="charts-section">
+                <div class="chart-container">
+                    <h2>📈 Evolução de Vitórias</h2>
+                    <canvas id="winsChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h2>🎯 Ratings ao Longo do Tempo</h2>
+                    <canvas id="ratingChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h2>📊 Taxa de Vitórias (%)</h2>
+                    <canvas id="resultsChart"></canvas>
+                </div>
+            </section>
+
+            <!-- Histórico -->
+            <section class="history-section">
+                <h2>📝 Últimas 10 Partidas</h2>
+                <table id="gameHistory">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Resultado</th>
+                            <th>Rating Brancas</th>
+                            <th>Rating Pretas</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyBody">
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
