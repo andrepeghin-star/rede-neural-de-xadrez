@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧠 Rede Neural de Xadrez - Evolução em Tempo Real</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .control-panel {
+            grid-column: 1 / -1;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+        }
+
+        .btn-warning:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .speed-control label {
+            font-weight: bold;
+        }
+
+        #speedSlider {
+            width: 200px;
+            cursor: pointer;
+        }
+
+        .board-section {
+            grid-column: 1;
+        }
+
+        .chessboard {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 0;
+            border: 3px solid #333;
+            background: #8b7355;
+            padding: 0;
+            margin-top: 10px;
+            max-width: 400px;
+        }
+
+        .square {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .square.white {
+            background: #f0d9b5;
+        }
+
+        .square.black {
+            background: #b58863;
+        }
+
+        .stats-section {
+            grid-column: 2;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-box h3 {
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .rating-section {
+            grid-column: 1 / -1;
+        }
+
+        .rating-display {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .rating-box {
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            color: white;
+        }
+
+        .rating-box.white {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+        }
+
+        .rating-box.black {
+            background: linear-gradient(135deg, #2c2c2c 0%, #000000 100%);
+        }
+
+        .rating-box h3 {
+            margin-bottom: 10px;
+        }
+
+        .rating {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        .charts-section {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .chart-container h2 {
+            font-size: 1.1em;
+        }
+
+        .history-section {
+            grid-column: 1 / -1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        thead {
+            background: #667eea;
+            color: white;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tbody tr:hover {
+            background: #f5f5f5;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+
+            .board-section, .stats-section {
+                grid-column: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧠 Rede Neural de Xadrez</h1>
+            <p>Observar a Evolução das IAs em Tempo Real</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Painel de Controle -->
+            <section class="control-panel">
+                <h2>⚙️ Controles</h2>
+                <div class="controls">
+                    <button id="startBtn" class="btn btn-primary">▶️ Iniciar</button>
+                    <button id="pauseBtn" class="btn btn-warning" disabled>⏸️ Pausar</button>
+                    <button id="resetBtn" class="btn btn-danger">🔄 Reiniciar</button>
+                </div>
+
+                <div class="speed-control">
+                    <label for="speedSlider">Velocidade: <span id="speedValue">1.0</span>x</label>
+                    <input type="range" id="speedSlider" min="0.5" max="5" step="0.5" value="1">
+                </div>
+            </section>
+
+            <!-- Tabuleiro de Xadrez -->
+            <section class="board-section">
+                <h2>♟️ Tabuleiro Atual</h2>
+                <div id="chessboard" class="chessboard"></div>
+            </section>
+
+            <!-- Estatísticas -->
+            <section class="stats-section">
+                <h2>📊 Estatísticas</h2>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <h3>Geração</h3>
+                        <p id="generation" class="stat-value">0</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Total de Jogos</h3>
+                        <p id="totalGames" class="stat-value">0</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Brancas Ganhou</h3>
+                        <p id="whiteWins" class="stat-value">0</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Pretas Ganhou</h3>
+                        <p id="blackWins" class="stat-value">0</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Empates</h3>
+                        <p id="draws" class="stat-value">0</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Taxa de Vitória</h3>
+                        <p id="winRate" class="stat-value">0%</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Ratings Elo -->
+            <section class="rating-section">
+                <h2>🏆 Ratings Elo</h2>
+                <div class="rating-display">
+                    <div class="rating-box white">
+                        <h3>♔ Brancas</h3>
+                        <p id="whiteRating" class="rating">1000</p>
+                    </div>
+                    <div class="rating-box black">
+                        <h3>♚ Pretas</h3>
+                        <p id="blackRating" class="rating">1000</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gráficos -->
+            <section class="charts-section">
+                <div class="chart-container">
+                    <h2>📈 Evolução de Vitórias</h2>
+                    <canvas id="winsChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h2>🎯 Ratings ao Longo do Tempo</h2>
+                    <canvas id="ratingChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h2>📊 Taxa de Vitórias (%)</h2>
+                    <canvas id="resultsChart"></canvas>
+                </div>
+            </section>
+
+            <!-- Histórico -->
+            <section class="history-section">
+                <h2>📝 Últimas 10 Partidas</h2>
+                <table id="gameHistory">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Resultado</th>
+                            <th>Rating Brancas</th>
+                            <th>Rating Pretas</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyBody">
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Estado global
+        let gameState = {
+            running: false,
+            paused: false,
+            speed: 1.0,
+            generation: 0,
+            games_played: 0,
+            white_wins: 0,
+            black_wins: 0,
+            draws: 0,
+            white_rating: 1000,
+            black_rating: 1000,
+            game_history: [],
+            charts: {
+                wins: null,
+                rating: null,
+                results: null
+            }
+        };
+
+        // Elementos DOM
+        const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const speedSlider = document.getElementById('speedSlider');
+        const speedValue = document.getElementById('speedValue');
+
+        // Event Listeners
+        startBtn.addEventListener('click', startEvolution);
+        pauseBtn.addEventListener('click', pauseEvolution);
+        resetBtn.addEventListener('click', resetEvolution);
+        speedSlider.addEventListener('input', (e) => {
+            gameState.speed = parseFloat(e.target.value);
+            speedValue.textContent = gameState.speed.toFixed(1);
+        });
+
+        function startEvolution() {
+            gameState.running = true;
+            gameState.paused = false;
+            startBtn.disabled = true;
+            pauseBtn.disabled = false;
+            evolutionLoop();
+        }
+
+        function pauseEvolution() {
+            gameState.paused = !gameState.paused;
+            pauseBtn.textContent = gameState.paused ? '▶️ Retomar' : '⏸️ Pausar';
+        }
+
+        function resetEvolution() {
+            gameState.running = false;
+            gameState.paused = false;
+            gameState.generation = 0;
+            gameState.games_played = 0;
+            gameState.white_wins = 0;
+            gameState.black_wins = 0;
+            gameState.draws = 0;
+            gameState.white_rating = 1000;
+            gameState.black_rating = 1000;
+            gameState.game_history = [];
+            
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+            pauseBtn.textContent = '⏸️ Pausar';
+            
+            updateUI();
+        }
+
+        function evolutionLoop() {
+            if (!gameState.running) return;
+
+            if (!gameState.paused) {
+                playGame();
+                updateUI();
+            }
+
+            const delay = 800 / gameState.speed;
+            setTimeout(evolutionLoop, delay);
+        }
+
+        function playGame() {
+            gameState.generation++;
+            gameState.games_played++;
+
+            const rand = Math.random();
+            let result;
+
+            if (rand < 0.4) {
+                result = 'white';
+                gameState.white_wins++;
+                gameState.white_rating += Math.floor(Math.random() * 10) + 5;
+                gameState.black_rating -= Math.floor(Math.random() * 7) + 3;
+            } else if (rand < 0.8) {
+                result = 'black';
+                gameState.black_wins++;
+                gameState.black_rating += Math.floor(Math.random() * 10) + 5;
+                gameState.white_rating -= Math.floor(Math.random() * 7) + 3;
+            } else {
+                result = 'draw';
+                gameState.draws++;
+                gameState.white_rating += Math.floor(Math.random() * 4) + 1;
+                gameState.black_rating += Math.floor(Math.random() * 4) + 1;
+            }
+
+            gameState.white_rating = Math.max(800, gameState.white_rating);
+            gameState.black_rating = Math.max(800, gameState.black_rating);
+
+            gameState.game_history.push({
+                game: gameState.games_played,
+                result: result,
+                white_rating: gameState.white_rating,
+                black_rating: gameState.black_rating
+            });
+
+            if (gameState.game_history.length > 50) {
+                gameState.game_history.shift();
+            }
+        }
+
+        function updateUI() {
+            document.getElementById('generation').textContent = gameState.generation;
+            document.getElementById('totalGames').textContent = gameState.games_played;
+            document.getElementById('whiteWins').textContent = gameState.white_wins;
+            document.getElementById('blackWins').textContent = gameState.black_wins;
+            document.getElementById('draws').textContent = gameState.draws;
+            document.getElementById('whiteRating').textContent = Math.round(gameState.white_rating);
+            document.getElementById('blackRating').textContent = Math.round(gameState.black_rating);
+
+            const winRate = gameState.games_played > 0 
+                ? ((gameState.white_wins / gameState.games_played) * 100).toFixed(1)
+                : 0;
+            document.getElementById('winRate').textContent = winRate + '%';
+
+            updateCharts();
+            updateHistoryTable();
+        }
+
+        function updateCharts() {
+            const games = gameState.game_history.map((_, i) => i + 1);
+            const whiteRatings = gameState.game_history.map(g => g.white_rating);
+            const blackRatings = gameState.game_history.map(g => g.black_rating);
+
+            if (gameState.charts.rating) {
+                gameState.charts.rating.data.labels = games;
+                gameState.charts.rating.data.datasets[0].data = whiteRatings;
+                gameState.charts.rating.data.datasets[1].data = blackRatings;
+                gameState.charts.rating.update();
+            }
+
+            if (gameState.charts.results) {
+                gameState.charts.results.data.datasets[0].data = [
+                    gameState.white_wins,
+                    gameState.black_wins,
+                    gameState.draws
+                ];
+                gameState.charts.results.update();
+            }
+        }
+
+        function updateHistoryTable() {
+            const tbody = document.getElementById('historyBody');
+            tbody.innerHTML = '';
+
+            const recent = gameState.game_history.slice(-10).reverse();
+            recent.forEach(game => {
+                const row = document.createElement('tr');
+                const resultText = game.result === 'white' ? '⚪ Brancas' : 
+                                   game.result === 'black' ? '⚫ Pretas' : '🤝 Empate';
+                row.innerHTML = `
+                    <td>${game.game}</td>
+                    <td>${resultText}</td>
+                    <td>${Math.round(game.white_rating)}</td>
+                    <td>${Math.round(game.black_rating)}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function initChessboard() {
+            const chessboard = document.getElementById('chessboard');
+            const initialBoard = [
+                ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'],
+                ['♟', '♟', '♟', '♟', '♟', '♟', '♟', '♟'],
+                ['', '', '', '', '', '', '', ''],
+                ['', '', '', '', '', '', '', ''],
+                ['', '', '', '', '', '', '', ''],
+                ['', '', '', '', '', '', '', ''],
+                ['♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙'],
+                ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖']
+            ];
+
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    const square = document.createElement('div');
+                    square.className = 'square ' + ((row + col) % 2 === 0 ? 'white' : 'black');
+                    square.textContent = initialBoard[row][col];
+                    chessboard.appendChild(square);
+                }
+            }
+        }
+
+        function initCharts() {
+            const ratingCtx = document.getElementById('ratingChart').getContext('2d');
+            gameState.charts.rating = new Chart(ratingCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: '♔ Brancas',
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            data: []
+                        },
+                        {
+                            label: '♚ Pretas',
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            data: []
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: true }
+                    },
+                    scales: {
+                        y: {
+                            min: 800,
+                            max: 1300
+                        }
+                    }
+                }
+            });
+
+            const resultsCtx = document.getElementById('resultsChart').getContext('2d');
+            gameState.charts.results = new Chart(resultsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Brancas', 'Pretas', 'Empates'],
+                    datasets: [{
+                        data: [0, 0, 0],
+                        backgroundColor: ['#f5f5dc', '#2c2c2c', '#10b981']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+
+        // Inicializar quando o DOM carregar
+        document.addEventListener('DOMContentLoaded', () => {
+            initChessboard();
+            initCharts();
+        });
+    </script>
+</body>
+</html>
