@@ -36,3 +36,7 @@ checkpoints/
 *.h5
 *.json
 logs/
+*.pkl
+.pytest_cache/
+.coverage
+htmlcov/
