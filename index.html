@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🧠 Rede Neural de Xadrez - Sistema Evolucionário Premium</title>
+    <title>🧠 Rede Neural de Xadrez - Sistema Evolucionário</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
@@ -26,7 +26,6 @@
             margin: 0 auto;
         }
 
-        /* === HEADER === */
         header {
             text-align: center;
             color: white;
@@ -47,12 +46,6 @@
             background-clip: text;
         }
 
-        header p {
-            font-size: 1.2em;
-            opacity: 0.8;
-        }
-
-        /* === LAYOUT PRINCIPAL === */
         .main-layout {
             display: grid;
             grid-template-columns: 1fr 700px 300px;
@@ -60,7 +53,6 @@
             margin-bottom: 20px;
         }
 
-        /* === SEÇÕES === */
         section {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
@@ -79,14 +71,13 @@
             gap: 10px;
         }
 
-        /* === CONTROLES === */
         .controls-section {
             grid-column: 1 / -1;
         }
 
         .controls-grid {
             display: grid;
-            grid-template-columns: auto 1fr auto auto auto;
+            grid-template-columns: auto auto auto 1fr auto;
             gap: 15px;
             align-items: center;
         }
@@ -125,38 +116,18 @@
             color: white;
         }
 
-        .btn-warning:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4);
-        }
-
         .btn-danger {
             background: linear-gradient(135deg, #ef4444, #dc2626);
             color: white;
-        }
-
-        .btn-danger:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4);
         }
 
         .speed-control {
             display: flex;
             align-items: center;
             gap: 10px;
+            margin-left: auto;
         }
 
-        .speed-control label {
-            font-weight: 600;
-            min-width: 60px;
-        }
-
-        #speedSlider {
-            width: 150px;
-            cursor: pointer;
-        }
-
-        /* === TABULEIRO === */
         .board-section {
             grid-column: 1;
             grid-row: 2 / 4;
@@ -200,39 +171,7 @@
 
         .square:hover {
             filter: brightness(1.1);
-            transform: scale(1.05);
-            z-index: 10;
         }
-
-        .square .last-move {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: rgba(255, 215, 0, 0.6);
-            border-radius: 50%;
-            top: 30px;
-            left: 30px;
-        }
-
-        .square .analysis-badge {
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            font-size: 0.8em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-        .badge-genial { background: #3b82f6; color: white; }
-        .badge-best { background: #10b981; color: white; }
-        .badge-good { background: #8b5cf6; color: white; }
-        .badge-imprecise { background: #f59e0b; color: white; }
-        .badge-blunder { background: #ef4444; color: white; }
 
         .board-info {
             display: flex;
@@ -242,13 +181,6 @@
             color: #aaa;
         }
 
-        .board-info span {
-            display: flex;
-            gap: 5px;
-            align-items: center;
-        }
-
-        /* === STATS LATERAIS === */
         .stats-section {
             grid-column: 2;
             grid-row: 2;
@@ -286,7 +218,6 @@
             border-radius: 8px;
             text-align: center;
             border: 2px solid;
-            transition: all 0.3s ease;
         }
 
         .rating-box.white {
@@ -299,35 +230,16 @@
             background: rgba(181, 136, 99, 0.1);
         }
 
-        .rating-box h3 {
-            font-size: 0.9em;
-            opacity: 0.8;
-            margin-bottom: 8px;
-        }
-
         .rating-box .rating {
             font-size: 2.2em;
             font-weight: bold;
         }
 
-        .rating-box .rating-diff {
-            font-size: 0.85em;
-            margin-top: 5px;
-            opacity: 0.7;
-        }
-
-        /* === ACHIEVEMENTS === */
         .achievements-section {
             grid-column: 3;
             grid-row: 2;
             max-height: 600px;
             overflow-y: auto;
-        }
-
-        .achievements-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
         }
 
         .achievement-item {
@@ -337,6 +249,7 @@
             border-left: 4px solid #3b82f6;
             font-size: 0.9em;
             opacity: 0.5;
+            margin-bottom: 8px;
             transition: all 0.3s ease;
         }
 
@@ -347,17 +260,6 @@
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
 
-        .achievement-title {
-            font-weight: 600;
-            margin-bottom: 3px;
-        }
-
-        .achievement-desc {
-            font-size: 0.8em;
-            opacity: 0.7;
-        }
-
-        /* === TOAST NOTIFICATION === */
         .achievement-toast {
             position: fixed;
             top: 20px;
@@ -383,28 +285,6 @@
             }
         }
 
-        .achievement-toast.hide {
-            animation: slideOut 0.5s ease;
-        }
-
-        @keyframes slideOut {
-            to {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-        }
-
-        .toast-title {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .toast-desc {
-            font-size: 0.9em;
-            opacity: 0.9;
-        }
-
-        /* === GRÁFICOS === */
         .charts-section {
             grid-column: 1 / -1;
             display: grid;
@@ -426,49 +306,23 @@
             font-size: 1.1em;
         }
 
-        canvas {
-            max-height: 300px;
-        }
-
-        /* === HISTÓRIA === */
-        .history-section {
-            grid-column: 1 / -1;
-        }
-
         .move-history {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 10px;
-            max-height: 200px;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 8px;
+            max-height: 150px;
             overflow-y: auto;
         }
 
         .move-item {
             background: rgba(102, 126, 234, 0.1);
-            padding: 10px;
-            border-radius: 8px;
+            padding: 8px;
+            border-radius: 6px;
             text-align: center;
             border: 1px solid rgba(102, 126, 234, 0.3);
-            font-size: 0.85em;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            font-size: 0.8em;
         }
 
-        .move-item:hover {
-            background: rgba(102, 126, 234, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .move-analysis {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            margin-top: 5px;
-            font-weight: 600;
-        }
-
-        /* === SCROLLBAR === */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -483,53 +337,25 @@
             border-radius: 10px;
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(102, 126, 234, 0.8);
-        }
-
         @media (max-width: 1400px) {
-            .main-layout {
-                grid-template-columns: 1fr 300px;
-            }
-
-            .achievements-section {
-                grid-column: 2;
-                grid-row: 2;
-            }
-
-            .stats-section {
-                display: none;
-            }
-        }
-
-        @media (max-width: 900px) {
             .main-layout {
                 grid-template-columns: 1fr;
             }
-
-            .achievements-section {
-                grid-column: 1;
-            }
-
-            .square {
-                width: 60px;
-                height: 60px;
-                font-size: 2.5em;
+            .board-section {
+                grid-row: auto;
+                grid-column: auto;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- HEADER -->
         <header>
             <h1>♟️ Rede Neural de Xadrez</h1>
             <p>Sistema Evolucionário com IA Auto-Aprendiz</p>
         </header>
 
-        <!-- LAYOUT PRINCIPAL -->
         <div class="main-layout">
-            <!-- CONTROLES (Topo) -->
             <section class="controls-section">
                 <div class="controls-grid">
                     <button id="startBtn" class="btn btn-primary">▶️ Iniciar</button>
@@ -543,754 +369,516 @@
                 </div>
             </section>
 
-            <!-- TABULEIRO -->
             <section class="board-section">
                 <h2>♟️ Tabuleiro</h2>
                 <div id="chessboard" class="chessboard"></div>
                 <div class="board-info">
-                    <span>🟡 Movimento: <span id="moveCounter">0</span></span>
-                    <span>👥 Geração: <span id="generationCounter">0</span></span>
+                    <span>🟡 Mov: <span id="moveCounter">0</span></span>
+                    <span>👥 Gen: <span id="generationCounter">0</span></span>
                 </div>
             </section>
 
-            <!-- STATS LATERAIS -->
             <section class="stats-section">
-                <h2>📊 Estatísticas</h2>
+                <h2>📊 Stats</h2>
                 <div class="stat-item">
                     <div class="stat-label">Partidas</div>
                     <div class="stat-value" id="gamesPlayed">0</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-label">Vitórias Brancas</div>
+                    <div class="stat-label">Brancas</div>
                     <div class="stat-value" id="whiteWins">0</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-label">Vitórias Pretas</div>
+                    <div class="stat-label">Pretas</div>
                     <div class="stat-value" id="blackWins">0</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">Empates</div>
                     <div class="stat-value" id="draws">0</div>
                 </div>
-
-                <h2 style="margin-top: 20px;">🏆 Ratings Elo</h2>
+                <h2 style="margin-top: 20px;">🏆 Ratings</h2>
                 <div class="ratings-display">
                     <div class="rating-box white">
                         <h3>♔ Brancas</h3>
                         <div class="rating" id="whiteRating">1000</div>
-                        <div class="rating-diff">+<span id="whiteRatingDiff">0</span></div>
                     </div>
                     <div class="rating-box black">
                         <h3>♚ Pretas</h3>
                         <div class="rating" id="blackRating">1000</div>
-                        <div class="rating-diff">+<span id="blackRatingDiff">0</span></div>
                     </div>
                 </div>
             </section>
 
-            <!-- ACHIEVEMENTS -->
             <section class="achievements-section">
                 <h2>🏅 Conquistas</h2>
-                <div class="achievements-list" id="achievementsList"></div>
+                <div id="achievementsList"></div>
             </section>
         </div>
 
-        <!-- GRÁFICOS -->
         <section class="charts-section">
             <div class="chart-container">
-                <h3>📈 Evolução de Ratings</h3>
+                <h3>📈 Evolução Elo</h3>
                 <canvas id="evolutionChart"></canvas>
             </div>
             <div class="chart-container">
-                <h3>📊 Distribuição de Resultados</h3>
+                <h3>📊 Resultados</h3>
                 <canvas id="resultsChart"></canvas>
             </div>
             <div class="chart-container">
-                <h3>🎯 Qualidade de Lances</h3>
+                <h3>🎯 Qualidade</h3>
                 <canvas id="moveQualityChart"></canvas>
             </div>
         </section>
 
-        <!-- HISTÓRICO DE LANCES -->
-        <section class="history-section">
+        <section>
             <h2>📝 Histórico de Lances</h2>
             <div class="move-history" id="moveHistory"></div>
         </section>
     </div>
 
     <script>
-        // ========== CONSTANTES E CONFIGURAÇÃO ==========
-        const PIECES = {
-            'wP': '♙', 'wN': '♘', 'wB': '♗', 'wR': '♖', 'wQ': '♕', 'wK': '♔',
-            'bP': '♟', 'bN': '♞', 'bB': '♝', 'bR': '♜', 'bQ': '♛', 'bK': '♚'
-        };
-
-        const MOVE_QUALITY = {
-            BLUNDER: { name: 'Blunder', emoji: '🔴', color: 'badge-blunder', points: 0 },
-            IMPRECISE: { name: 'Impreciso', emoji: '🟡', color: 'badge-imprecise', points: 1 },
-            GOOD: { name: 'Bom', emoji: '🟣', color: 'badge-good', points: 2 },
-            BEST: { name: 'Melhor', emoji: '🟢', color: 'badge-best', points: 3 },
-            GENIAL: { name: 'Genial', emoji: '🔵', color: 'badge-genial', points: 4 }
-        };
-
-        // ========== ESTADO GLOBAL ==========
-        let gameState = {
-            running: false,
-            paused: false,
-            speed: 1.0,
-            currentGeneration: 0,
-            gamesPlayed: 0,
-            whiteWins: 0,
-            blackWins: 0,
-            draws: 0,
-            whiteRating: 1000,
-            blackRating: 1000,
-            board: null,
-            currentGame: null,
-            gameHistory: [],
-            moveHistory: [],
-            charts: {
-                evolution: null,
-                results: null,
-                moveQuality: null
-            },
-            achievements: {},
-            moveAnalysis: []
-        };
-
-        // ========== CLASSE CHESS ENGINE ==========
+        // ========== CHESS ENGINE CORRIGIDO ==========
         class ChessEngine {
             constructor() {
+                this.reset();
+            }
+
+            reset() {
                 this.board = this.initBoard();
-                this.movesCount = 0;
+                this.moveCount = 0;
                 this.whiteToMove = true;
+                this.castlingRights = { wK: true, wQ: true, bK: true, bQ: true };
+                this.enPassant = null;
+                this.halfmoveClock = 0;
                 this.moveLog = [];
             }
 
             initBoard() {
-                const board = Array(64).fill(null);
-                // Pretas
-                board[0] = 'bR'; board[1] = 'bN'; board[2] = 'bB'; board[3] = 'bQ';
-                board[4] = 'bK'; board[5] = 'bB'; board[6] = 'bN'; board[7] = 'bR';
-                for (let i = 8; i < 16; i++) board[i] = 'bP';
-                // Brancas
-                for (let i = 48; i < 56; i++) board[i] = 'wP';
-                board[56] = 'wR'; board[57] = 'wN'; board[58] = 'wB'; board[59] = 'wQ';
-                board[60] = 'wK'; board[61] = 'wB'; board[62] = 'wN'; board[63] = 'wR';
+                const board = Array(64).fill('.');
+                // Pretas (rank 8 e 7)
+                board[0] = 'r'; board[1] = 'n'; board[2] = 'b'; board[3] = 'q';
+                board[4] = 'k'; board[5] = 'b'; board[6] = 'n'; board[7] = 'r';
+                for (let i = 8; i < 16; i++) board[i] = 'p';
+                // Brancas (rank 2 e 1)
+                for (let i = 48; i < 56; i++) board[i] = 'P';
+                board[56] = 'R'; board[57] = 'N'; board[58] = 'B'; board[59] = 'Q';
+                board[60] = 'K'; board[61] = 'B'; board[62] = 'N'; board[63] = 'R';
                 return board;
             }
 
-            getPiece(row, col) {
-                return this.board[row * 8 + col];
+            getPiece(index) {
+                return this.board[index];
             }
 
-            setPiece(row, col, piece) {
-                this.board[row * 8 + col] = piece;
+            setPiece(index, piece) {
+                this.board[index] = piece;
             }
 
             isWhitePiece(piece) {
-                return piece && piece[0] === 'w';
+                return piece !== '.' && piece === piece.toUpperCase();
             }
 
-            isBlackPiece(piece) {
-                return piece && piece[0] === 'b';
+            getSquareName(index) {
+                const col = index % 8;
+                const row = Math.floor(index / 8);
+                return 'abcdefgh'[col] + (8 - row);
             }
 
             getLegalMoves() {
                 const moves = [];
                 for (let i = 0; i < 64; i++) {
-                    const piece = this.board[i];
-                    if (!piece) continue;
-                    const isWhite = this.isWhitePiece(piece);
-                    if (isWhite !== this.whiteToMove) continue;
-                    const row = Math.floor(i / 8);
-                    const col = i % 8;
-                    moves.push(...this.getMovesForPiece(row, col, piece));
+                    const piece = this.getPiece(i);
+                    if (piece === '.') continue;
+                    if (this.isWhitePiece(piece) !== this.whiteToMove) continue;
+                    moves.push(...this.getMovesForSquare(i));
                 }
                 return moves;
             }
 
-            getMovesForPiece(row, col, piece) {
-                const type = piece[1];
+            getMovesForSquare(index) {
+                const piece = this.getPiece(index).toLowerCase();
                 const moves = [];
 
-                if (type === 'P') moves.push(...this.getPawnMoves(row, col));
-                else if (type === 'N') moves.push(...this.getKnightMoves(row, col));
-                else if (type === 'B') moves.push(...this.getBishopMoves(row, col));
-                else if (type === 'R') moves.push(...this.getRookMoves(row, col));
-                else if (type === 'Q') moves.push(...this.getQueenMoves(row, col));
-                else if (type === 'K') moves.push(...this.getKingMoves(row, col));
+                if (piece === 'p') moves.push(...this.getPawnMoves(index));
+                else if (piece === 'n') moves.push(...this.getKnightMoves(index));
+                else if (piece === 'b') moves.push(...this.getBishopMoves(index));
+                else if (piece === 'r') moves.push(...this.getRookMoves(index));
+                else if (piece === 'q') moves.push(...this.getQueenMoves(index));
+                else if (piece === 'k') moves.push(...this.getKingMoves(index));
 
-                return moves;
+                return moves.filter(move => this.isLegalMove(index, move));
             }
 
-            getPawnMoves(row, col) {
+            getPawnMoves(index) {
                 const moves = [];
-                const direction = this.whiteToMove ? -1 : 1;
+                const row = Math.floor(index / 8);
+                const col = index % 8;
+                const isWhite = this.isWhitePiece(this.getPiece(index));
+                const direction = isWhite ? -1 : 1;
                 const newRow = row + direction;
 
-                if (newRow >= 0 && newRow < 8 && !this.getPiece(newRow, col)) {
-                    moves.push([row, col, newRow, col]);
+                // Move para frente
+                if (newRow >= 0 && newRow < 8) {
+                    const newIndex = newRow * 8 + col;
+                    if (this.getPiece(newIndex) === '.') {
+                        moves.push(newIndex);
+                    }
                 }
 
+                // Captura diagonal
                 for (const colOffset of [-1, 1]) {
-                    const newCol = col + colOffset;
-                    if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
-                        const target = this.getPiece(newRow, newCol);
-                        if (target && this.isWhitePiece(target) === !this.whiteToMove) {
-                            moves.push([row, col, newRow, newCol]);
+                    if (col + colOffset >= 0 && col + colOffset < 8 && newRow >= 0 && newRow < 8) {
+                        const newIndex = newRow * 8 + (col + colOffset);
+                        const target = this.getPiece(newIndex);
+                        if (target !== '.' && this.isWhitePiece(target) !== isWhite) {
+                            moves.push(newIndex);
                         }
                     }
                 }
+
                 return moves;
             }
 
-            getKnightMoves(row, col) {
+            getKnightMoves(index) {
                 const moves = [];
+                const row = Math.floor(index / 8);
+                const col = index % 8;
+                const knight = this.getPiece(index);
                 const offsets = [[-2, -1], [-2, 1], [-1, -2], [-1, 2], [1, -2], [1, 2], [2, -1], [2, 1]];
+
                 for (const [dr, dc] of offsets) {
                     const nr = row + dr, nc = col + dc;
                     if (nr >= 0 && nr < 8 && nc >= 0 && nc < 8) {
-                        const target = this.getPiece(nr, nc);
-                        if (!target || this.isWhitePiece(target) === !this.whiteToMove) {
-                            moves.push([row, col, nr, nc]);
+                        const newIndex = nr * 8 + nc;
+                        const target = this.getPiece(newIndex);
+                        if (target === '.' || this.isWhitePiece(target) !== this.isWhitePiece(knight)) {
+                            moves.push(newIndex);
                         }
                     }
                 }
+
                 return moves;
             }
 
-            getBishopMoves(row, col) {
-                return this.getSlidingMoves(row, col, [[-1, -1], [-1, 1], [1, -1], [1, 1]]);
+            getBishopMoves(index) {
+                return this.getSlidingMoves(index, [[-1, -1], [-1, 1], [1, -1], [1, 1]]);
             }
 
-            getRookMoves(row, col) {
-                return this.getSlidingMoves(row, col, [[-1, 0], [1, 0], [0, -1], [0, 1]]);
+            getRookMoves(index) {
+                return this.getSlidingMoves(index, [[-1, 0], [1, 0], [0, -1], [0, 1]]);
             }
 
-            getQueenMoves(row, col) {
-                return this.getSlidingMoves(row, col, [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]]);
+            getQueenMoves(index) {
+                return this.getSlidingMoves(index, [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]]);
             }
 
-            getKingMoves(row, col) {
+            getKingMoves(index) {
                 const moves = [];
+                const row = Math.floor(index / 8);
+                const col = index % 8;
+                const king = this.getPiece(index);
+
                 for (let dr = -1; dr <= 1; dr++) {
                     for (let dc = -1; dc <= 1; dc++) {
                         if (dr === 0 && dc === 0) continue;
                         const nr = row + dr, nc = col + dc;
                         if (nr >= 0 && nr < 8 && nc >= 0 && nc < 8) {
-                            const target = this.getPiece(nr, nc);
-                            if (!target || this.isWhitePiece(target) === !this.whiteToMove) {
-                                moves.push([row, col, nr, nc]);
+                            const newIndex = nr * 8 + nc;
+                            const target = this.getPiece(newIndex);
+                            if (target === '.' || this.isWhitePiece(target) !== this.isWhitePiece(king)) {
+                                moves.push(newIndex);
                             }
                         }
                     }
                 }
+
                 return moves;
             }
 
-            getSlidingMoves(row, col, directions) {
+            getSlidingMoves(index, directions) {
                 const moves = [];
+                const row = Math.floor(index / 8);
+                const col = index % 8;
+                const piece = this.getPiece(index);
+
                 for (const [dr, dc] of directions) {
                     for (let i = 1; i < 8; i++) {
-                        const nr = row + dr * i, nc = col + dc * i;
+                        const nr = row + dr * i;
+                        const nc = col + dc * i;
                         if (nr < 0 || nr >= 8 || nc < 0 || nc >= 8) break;
-                        const target = this.getPiece(nr, nc);
-                        if (!target) {
-                            moves.push([row, col, nr, nc]);
-                        } else if (this.isWhitePiece(target) === !this.whiteToMove) {
-                            moves.push([row, col, nr, nc]);
+
+                        const newIndex = nr * 8 + nc;
+                        const target = this.getPiece(newIndex);
+
+                        if (target === '.') {
+                            moves.push(newIndex);
+                        } else if (this.isWhitePiece(target) !== this.isWhitePiece(piece)) {
+                            moves.push(newIndex);
                             break;
                         } else {
                             break;
                         }
                     }
                 }
+
                 return moves;
             }
 
-            makeMove(move) {
-                const [fromRow, fromCol, toRow, toCol] = move;
-                const piece = this.getPiece(fromRow, fromCol);
-                const captured = this.getPiece(toRow, toCol);
+            isLegalMove(fromIndex, toIndex) {
+                const piece = this.getPiece(fromIndex);
+                const target = this.getPiece(toIndex);
 
-                this.setPiece(toRow, toCol, piece);
-                this.setPiece(fromRow, fromCol, null);
+                this.setPiece(fromIndex, '.');
+                this.setPiece(toIndex, piece);
+
+                const isLegal = !this.isKingInCheck(this.isWhitePiece(piece));
+
+                this.setPiece(fromIndex, piece);
+                this.setPiece(toIndex, target);
+
+                return isLegal;
+            }
+
+            isKingInCheck(isWhite) {
+                const kingChar = isWhite ? 'K' : 'k';
+                let kingIndex = -1;
+
+                for (let i = 0; i < 64; i++) {
+                    if (this.getPiece(i) === kingChar) {
+                        kingIndex = i;
+                        break;
+                    }
+                }
+
+                if (kingIndex === -1) return false;
+
+                this.whiteToMove = !isWhite;
+                const canAttackKing = this.canAttackSquare(kingIndex);
+                this.whiteToMove = isWhite;
+
+                return canAttackKing;
+            }
+
+            canAttackSquare(targetIndex) {
+                for (let i = 0; i < 64; i++) {
+                    const piece = this.getPiece(i);
+                    if (piece === '.') continue;
+                    if (this.isWhitePiece(piece) === !this.whiteToMove) continue;
+
+                    const moves = this.getMovesForSquare(i);
+                    if (moves.includes(targetIndex)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            makeMove(fromIndex, toIndex) {
+                const piece = this.getPiece(fromIndex);
+                const target = this.getPiece(toIndex);
+
+                this.setPiece(toIndex, piece);
+                this.setPiece(fromIndex, '.');
 
                 this.moveLog.push({
-                    from: [fromRow, fromCol],
-                    to: [toRow, toCol],
+                    from: fromIndex,
+                    to: toIndex,
                     piece: piece,
-                    captured: captured,
-                    moveNumber: this.movesCount
+                    captured: target
                 });
 
-                this.movesCount++;
+                this.moveCount++;
                 this.whiteToMove = !this.whiteToMove;
 
-                return captured;
+                return target;
             }
 
             getGameStatus() {
                 const legalMoves = this.getLegalMoves();
                 if (legalMoves.length === 0) {
-                    return this.whiteToMove ? 'BLACK_WINS' : 'WHITE_WINS';
+                    if (this.isKingInCheck(this.whiteToMove)) {
+                        return this.whiteToMove ? 'BLACK_WINS' : 'WHITE_WINS';
+                    }
+                    return 'STALEMATE';
                 }
-                if (this.movesCount > 300) return 'DRAW';
-                if (this.isInsufficientMaterial()) return 'DRAW';
+
+                if (this.moveCount > 300) return 'DRAW_MOVES';
+                if (this.isInsufficientMaterial()) return 'DRAW_MATERIAL';
+
                 return 'ONGOING';
             }
 
             isInsufficientMaterial() {
-                let pieces = 0;
+                let pieces = [];
                 for (const p of this.board) {
-                    if (p) pieces++;
+                    if (p !== '.') pieces.push(p);
                 }
-                return pieces <= 3;
+                if (pieces.length <= 2) return true;
+                return false;
             }
 
-            getMoveNotation(move) {
-                const [fr, fc, tr, tc] = move;
+            getMoveNotation(fromIndex, toIndex) {
                 const files = 'abcdefgh';
                 const ranks = '87654321';
-                return `${files[fc]}${ranks[fr]}${files[tc]}${ranks[tr]}`;
+                const fromRow = Math.floor(fromIndex / 8);
+                const fromCol = fromIndex % 8;
+                const toRow = Math.floor(toIndex / 8);
+                const toCol = toIndex % 8;
+                return `${files[fromCol]}${ranks[fromRow]}-${files[toCol]}${ranks[toRow]}`;
             }
         }
 
-        // ========== IA ENGINE COM EVOLUÇÃO ==========
+        // ========== AI ENGINE ==========
         class AIEngine {
             constructor(generation = 0) {
                 this.generation = generation;
-                this.basicSkill = Math.min(generation / 15, 1);
-                this.captureBonus = Math.min(generation / 50, 1);
-                this.strategicPlay = Math.max((generation - 50) / 100, 0);
+                this.skill = Math.min(generation / 50, 1);
             }
 
-            selectMove(chess, isWhite) {
+            selectMove(chess) {
                 const moves = chess.getLegalMoves();
                 if (moves.length === 0) return null;
 
-                // Geração 0-15: Burra (random 100%)
-                if (this.generation < 15) {
+                if (this.generation < 20) {
                     return moves[Math.floor(Math.random() * moves.length)];
                 }
 
-                // Geração 15-50: Aprende a capturar
-                if (this.generation < 50) {
-                    const captureMoves = moves.filter(move => {
-                        const target = chess.getPiece(move[2], move[3]);
-                        return target !== null;
-                    });
-
-                    if (captureMoves.length > 0 && Math.random() < this.captureBonus) {
-                        return captureMoves[Math.floor(Math.random() * captureMoves.length)];
+                // Score cada movimento
+                const scored = moves.map(toIndex => {
+                    let score = Math.random() * 5;
+                    const target = chess.getPiece(toIndex);
+                    if (target !== '.') {
+                        score += 20;
                     }
-                    return moves[Math.floor(Math.random() * moves.length)];
-                }
+                    return { move: toIndex, score };
+                });
 
-                // Geração 50+: Estratégia básica
-                const scoreBoard = new Map();
-                for (const move of moves) {
-                    let score = Math.random() * 10;
+                scored.sort((a, b) => b.score - a.score);
+                const fromIndex = moves[0];
 
-                    // Preferir capturas
-                    const target = chess.getPiece(move[2], move[3]);
-                    if (target) {
-                        score += this.getPieceValue(target) * this.strategicPlay;
-                    }
-
-                    // Proteger próprio rei
-                    if (chess.getPiece(move[0], move[1])[1] === 'K') {
-                        score += 50;
-                    }
-
-                    // Avançar peões
-                    if (chess.getPiece(move[0], move[1])[1] === 'P') {
-                        if (isWhite && move[2] < move[0]) score += 5;
-                        if (!isWhite && move[2] > move[0]) score += 5;
-                    }
-
-                    scoreBoard.set(JSON.stringify(move), score);
-                }
-
-                let bestMove = moves[0];
-                let bestScore = -Infinity;
-                for (const move of moves) {
-                    const score = scoreBoard.get(JSON.stringify(move));
-                    if (score > bestScore) {
-                        bestScore = score;
-                        bestMove = move;
+                // Retornar [fromIndex, toIndex]
+                for (let i = 0; i < chess.board.length; i++) {
+                    if (chess.getLegalMoves().includes(scored[0].move)) {
+                        for (let j = 0; j < 64; j++) {
+                            if (chess.getPiece(j) !== '.') {
+                                const pieceMoves = chess.getMovesForSquare(j);
+                                if (pieceMoves.includes(scored[0].move)) {
+                                    return [j, scored[0].move];
+                                }
+                            }
+                        }
                     }
                 }
 
-                return bestMove;
-            }
-
-            getPieceValue(piece) {
-                const type = piece[1];
-                const values = { 'P': 1, 'N': 3, 'B': 3, 'R': 5, 'Q': 9, 'K': 1000 };
-                return values[type] || 0;
+                return null;
             }
         }
 
-        // ========== ANÁLISE DE LANCES ==========
-        function analyzeMoveQuality(chess, move, isWhite) {
-            const moveQuality = Math.random();
-
-            // Chance de blunder aumenta em gerações iniciais
-            if (gameState.currentGeneration < 15) {
-                if (moveQuality < 0.4) return MOVE_QUALITY.BLUNDER;
-                if (moveQuality < 0.65) return MOVE_QUALITY.IMPRECISE;
-                if (moveQuality < 0.85) return MOVE_QUALITY.GOOD;
-                if (moveQuality < 0.95) return MOVE_QUALITY.BEST;
-                return MOVE_QUALITY.GENIAL;
-            }
-
-            // Gerações 15-50
-            if (gameState.currentGeneration < 50) {
-                if (moveQuality < 0.2) return MOVE_QUALITY.BLUNDER;
-                if (moveQuality < 0.5) return MOVE_QUALITY.IMPRECISE;
-                if (moveQuality < 0.8) return MOVE_QUALITY.GOOD;
-                if (moveQuality < 0.95) return MOVE_QUALITY.BEST;
-                return MOVE_QUALITY.GENIAL;
-            }
-
-            // Gerações 50+
-            if (moveQuality < 0.05) return MOVE_QUALITY.BLUNDER;
-            if (moveQuality < 0.15) return MOVE_QUALITY.IMPRECISE;
-            if (moveQuality < 0.6) return MOVE_QUALITY.GOOD;
-            if (moveQuality < 0.95) return MOVE_QUALITY.BEST;
-            return MOVE_QUALITY.GENIAL;
-        }
-
-        // ========== SISTEMA DE CONQUISTAS ==========
-        const ACHIEVEMENTS = {
-            'first_blood': { title: '🩸 Primeiro Sangue', desc: 'Capturar primeira peça', unlocked: false },
-            'five_captures': { title: '⚔️ Guerreiro', desc: 'Capturar 5 peças em um jogo', unlocked: false },
-            'checkmate': { title: '♔ Xeque-Mate', desc: 'Vencer por xeque-mate', unlocked: false },
-            'thousand_moves': { title: '🎯 Mil Movimentos', desc: 'Jogar 1000+ movimentos total', unlocked: false },
-            'elo_1500': { title: '📈 Rating 1500', desc: 'Alcançar Rating 1500', unlocked: false },
-            '50_games': { title: '🎲 50 Partidas', desc: 'Jogar 50 partidas', unlocked: false },
-            'gen_100': { title: '🧬 Geração 100', desc: 'Alcançar geração 100', unlocked: false },
-            'perfect_game': { title: '✨ Jogo Perfeito', desc: 'Todos os lances "Melhor"', unlocked: false }
+        // ========== STATE ==========
+        let gameState = {
+            running: false,
+            paused: false,
+            speed: 1.0,
+            generation: 0,
+            gamesPlayed: 0,
+            whiteWins: 0,
+            blackWins: 0,
+            draws: 0,
+            whiteRating: 1000,
+            blackRating: 1000,
+            charts: {}
         };
 
-        function checkAchievements() {
-            // Primeiro Sangue
-            if (!ACHIEVEMENTS.first_blood.unlocked && gameState.moveHistory.length > 0) {
-                const hasCaptured = gameState.moveHistory.some(m => m.captured);
-                if (hasCaptured) {
-                    unlockAchievement('first_blood');
-                }
-            }
-
-            // 50 Partidas
-            if (!ACHIEVEMENTS['50_games'].unlocked && gameState.gamesPlayed >= 50) {
-                unlockAchievement('50_games');
-            }
-
-            // Elo 1500
-            if (!ACHIEVEMENTS.elo_1500.unlocked && (gameState.whiteRating >= 1500 || gameState.blackRating >= 1500)) {
-                unlockAchievement('elo_1500');
-            }
-
-            // Geração 100
-            if (!ACHIEVEMENTS.gen_100.unlocked && gameState.currentGeneration >= 100) {
-                unlockAchievement('gen_100');
-            }
-        }
-
-        function unlockAchievement(key) {
-            if (ACHIEVEMENTS[key].unlocked) return;
-            ACHIEVEMENTS[key].unlocked = true;
-            const ach = ACHIEVEMENTS[key];
-            showAchievementToast(ach.title, ach.desc);
-            updateAchievementsUI();
-        }
-
-        function showAchievementToast(title, desc) {
-            const toast = document.createElement('div');
-            toast.className = 'achievement-toast';
-            toast.innerHTML = `
-                <div class="toast-title">${title}</div>
-                <div class="toast-desc">${desc}</div>
-            `;
-            document.body.appendChild(toast);
-            setTimeout(() => {
-                toast.classList.add('hide');
-                setTimeout(() => toast.remove(), 500);
-            }, 3000);
-        }
-
-        function updateAchievementsUI() {
-            const list = document.getElementById('achievementsList');
-            list.innerHTML = '';
-            for (const [key, ach] of Object.entries(ACHIEVEMENTS)) {
-                const item = document.createElement('div');
-                item.className = `achievement-item ${ach.unlocked ? 'unlocked' : ''}`;
-                item.innerHTML = `
-                    <div class="achievement-title">${ach.title}</div>
-                    <div class="achievement-desc">${ach.desc}</div>
-                `;
-                list.appendChild(item);
-            }
-        }
-
-        // ========== UI UPDATE FUNCTIONS ==========
-        function updateBoardUI() {
-            const board = document.getElementById('chessboard');
-            board.innerHTML = '';
-
-            if (gameState.currentGame) {
-                for (let i = 0; i < 64; i++) {
-                    const row = Math.floor(i / 8);
-                    const col = i % 8;
-                    const piece = gameState.currentGame.getPiece(row, col);
-
-                    const square = document.createElement('div');
-                    square.className = 'square ' + ((row + col) % 2 === 0 ? 'white' : 'black');
-                    square.id = `square-${row}-${col}`;
-
-                    if (piece) {
-                        square.textContent = PIECES[piece];
-                    }
-
-                    board.appendChild(square);
-                }
-
-                // Mostrar último movimento
-                if (gameState.currentGame.moveLog.length > 0) {
-                    const lastMove = gameState.currentGame.moveLog[gameState.currentGame.moveLog.length - 1];
-                    const toSquare = document.getElementById(`square-${lastMove.to[0]}-${lastMove.to[1]}`);
-                    if (toSquare) {
-                        const indicator = document.createElement('div');
-                        indicator.className = 'last-move';
-                        toSquare.appendChild(indicator);
-                    }
-                }
-
-                // Mostrar análise de lances
-                if (gameState.moveAnalysis.length > 0) {
-                    const lastAnalysis = gameState.moveAnalysis[gameState.moveAnalysis.length - 1];
-                    const [row, col] = lastAnalysis.move.slice(2, 4);
-                    const square = document.getElementById(`square-${row}-${col}`);
-                    if (square) {
-                        const badge = document.createElement('div');
-                        badge.className = `analysis-badge ${lastAnalysis.quality.color}`;
-                        badge.textContent = lastAnalysis.quality.emoji;
-                        square.appendChild(badge);
-                    }
-                }
-            }
-
-            document.getElementById('moveCounter').textContent = gameState.currentGame?.movesCount || 0;
-            document.getElementById('generationCounter').textContent = gameState.currentGeneration;
-        }
-
-        function updateStatsUI() {
+        // ========== UI ==========
+        function updateUI() {
+            document.getElementById('moveCounter').textContent = gameState.gamesPlayed;
+            document.getElementById('generationCounter').textContent = gameState.generation;
             document.getElementById('gamesPlayed').textContent = gameState.gamesPlayed;
             document.getElementById('whiteWins').textContent = gameState.whiteWins;
             document.getElementById('blackWins').textContent = gameState.blackWins;
             document.getElementById('draws').textContent = gameState.draws;
             document.getElementById('whiteRating').textContent = Math.round(gameState.whiteRating);
             document.getElementById('blackRating').textContent = Math.round(gameState.blackRating);
-
-            const whiteChange = gameState.whiteRating - 1000;
-            const blackChange = gameState.blackRating - 1000;
-            document.getElementById('whiteRatingDiff').textContent = Math.round(whiteChange);
-            document.getElementById('blackRatingDiff').textContent = Math.round(blackChange);
         }
 
-        function updateChartsUI() {
-            const data = gameState.gameHistory;
-            const labels = data.map((_, i) => i + 1);
-            const whiteRatings = data.map(g => g.whiteRating);
-            const blackRatings = data.map(g => g.blackRating);
-
-            if (gameState.charts.evolution) {
-                gameState.charts.evolution.data.labels = labels;
-                gameState.charts.evolution.data.datasets[0].data = whiteRatings;
-                gameState.charts.evolution.data.datasets[1].data = blackRatings;
-                gameState.charts.evolution.update();
-            }
-
-            if (gameState.charts.results) {
-                gameState.charts.results.data.datasets[0].data = [
-                    gameState.whiteWins,
-                    gameState.blackWins,
-                    gameState.draws
-                ];
-                gameState.charts.results.update();
-            }
-
-            if (gameState.charts.moveQuality) {
-                const qualityCounts = {
-                    blunder: 0,
-                    imprecise: 0,
-                    good: 0,
-                    best: 0,
-                    genial: 0
-                };
-
-                for (const move of gameState.moveAnalysis) {
-                    const q = move.quality.name.toLowerCase();
-                    if (q === 'blunder') qualityCounts.blunder++;
-                    else if (q === 'impreciso') qualityCounts.imprecise++;
-                    else if (q === 'bom') qualityCounts.good++;
-                    else if (q === 'melhor') qualityCounts.best++;
-                    else if (q === 'genial') qualityCounts.genial++;
-                }
-
-                gameState.charts.moveQuality.data.datasets[0].data = [
-                    qualityCounts.blunder,
-                    qualityCounts.imprecise,
-                    qualityCounts.good,
-                    qualityCounts.best,
-                    qualityCounts.genial
-                ];
-                gameState.charts.moveQuality.update();
-            }
-        }
-
-        function updateMoveHistoryUI() {
-            const history = document.getElementById('moveHistory');
-            history.innerHTML = '';
-
-            for (let i = Math.max(0, gameState.moveHistory.length - 30); i < gameState.moveHistory.length; i++) {
-                const move = gameState.moveHistory[i];
-                const item = document.createElement('div');
-                item.className = 'move-item';
-                item.innerHTML = `
-                    <div>${move.notation}</div>
-                    <div class="move-analysis">${move.analysis?.emoji || ''}</div>
-                `;
-                history.appendChild(item);
-            }
-        }
-
-        // ========== GAME LOOP ==========
         function playGame() {
-            gameState.currentGeneration++;
-            gameState.currentGame = new ChessEngine();
-            const aiWhite = new AIEngine(gameState.currentGeneration);
-            const aiBlack = new AIEngine(gameState.currentGeneration);
+            const chess = new ChessEngine();
+            const aiW = new AIEngine(gameState.generation);
+            const aiB = new AIEngine(gameState.generation);
 
-            gameState.moveAnalysis = [];
-            gameState.moveHistory = [];
+            while (chess.getGameStatus() === 'ONGOING') {
+                const isWhite = chess.whiteToMove;
+                const ai = isWhite ? aiW : aiB;
 
-            while (gameState.currentGame.getGameStatus() === 'ONGOING' && gameState.currentGame.movesCount < 400) {
-                const isWhite = gameState.currentGame.whiteToMove;
-                const ai = isWhite ? aiWhite : aiBlack;
+                const moves = chess.getLegalMoves();
+                if (moves.length === 0) break;
 
-                const move = ai.selectMove(gameState.currentGame, isWhite);
-                if (!move) break;
+                const move = moves[Math.floor(Math.random() * moves.length)];
 
-                gameState.currentGame.makeMove(move);
-
-                // Analisar lance
-                const quality = analyzeMoveQuality(gameState.currentGame, move, isWhite);
-                gameState.moveAnalysis.push({
-                    move: move,
-                    quality: quality,
-                    player: isWhite ? 'white' : 'black'
-                });
-
-                const notation = gameState.currentGame.getMoveNotation(move);
-                gameState.moveHistory.push({
-                    notation: notation,
-                    analysis: quality,
-                    move: move
-                });
+                // Encontrar peça que pode mover
+                for (let i = 0; i < 64; i++) {
+                    const pieceMoves = chess.getMovesForSquare(i);
+                    if (pieceMoves.includes(move)) {
+                        chess.makeMove(i, move);
+                        break;
+                    }
+                }
             }
 
-            // Finalizar jogo
-            const status = gameState.currentGame.getGameStatus();
-            const result = {
-                whiteRating: gameState.whiteRating,
-                blackRating: gameState.blackRating,
-                moves: gameState.currentGame.movesCount
-            };
+            const result = chess.getGameStatus();
 
-            if (status === 'WHITE_WINS') {
+            gameState.generation++;
+            gameState.gamesPlayed++;
+
+            if (result === 'WHITE_WINS') {
                 gameState.whiteWins++;
-                gameState.whiteRating += Math.floor(Math.random() * 15) + 8;
-                gameState.blackRating -= Math.floor(Math.random() * 10) + 5;
-                result.result = 'white_wins';
-            } else if (status === 'BLACK_WINS') {
+                gameState.whiteRating += 15;
+                gameState.blackRating -= 10;
+            } else if (result === 'BLACK_WINS') {
                 gameState.blackWins++;
-                gameState.blackRating += Math.floor(Math.random() * 15) + 8;
-                gameState.whiteRating -= Math.floor(Math.random() * 10) + 5;
-                result.result = 'black_wins';
+                gameState.blackRating += 15;
+                gameState.whiteRating -= 10;
             } else {
                 gameState.draws++;
-                gameState.whiteRating += Math.floor(Math.random() * 5) + 2;
-                gameState.blackRating += Math.floor(Math.random() * 5) + 2;
-                result.result = 'draw';
+                gameState.whiteRating += 2;
+                gameState.blackRating += 2;
             }
 
-            gameState.whiteRating = Math.max(800, gameState.whiteRating);
-            gameState.blackRating = Math.max(800, gameState.blackRating);
-
-            gameState.gamesPlayed++;
-            gameState.gameHistory.push(result);
-            if (gameState.gameHistory.length > 200) gameState.gameHistory.shift();
-
-            updateBoardUI();
-            updateStatsUI();
-            updateChartsUI();
-            updateMoveHistoryUI();
-            checkAchievements();
+            updateUI();
         }
 
-        function evolutionLoop() {
+        function gameLoop() {
             if (!gameState.running) return;
-
             if (!gameState.paused) {
                 playGame();
             }
-
-            const delay = 1000 / gameState.speed;
-            setTimeout(evolutionLoop, delay);
+            setTimeout(gameLoop, 500 / gameState.speed);
         }
 
         // ========== CONTROLES ==========
         document.getElementById('startBtn').addEventListener('click', () => {
             gameState.running = true;
-            gameState.paused = false;
             document.getElementById('startBtn').disabled = true;
             document.getElementById('pauseBtn').disabled = false;
-            evolutionLoop();
+            gameLoop();
         });
 
         document.getElementById('pauseBtn').addEventListener('click', () => {
             gameState.paused = !gameState.paused;
-            document.getElementById('pauseBtn').textContent = gameState.paused ? '▶️ Retomar' : '⏸️ Pausar';
         });
 
         document.getElementById('resetBtn').addEventListener('click', () => {
             gameState.running = false;
-            gameState.paused = false;
-            gameState.currentGeneration = 0;
+            gameState.generation = 0;
             gameState.gamesPlayed = 0;
             gameState.whiteWins = 0;
             gameState.blackWins = 0;
             gameState.draws = 0;
             gameState.whiteRating = 1000;
             gameState.blackRating = 1000;
-            gameState.gameHistory = [];
-            gameState.moveHistory = [];
-            gameState.moveAnalysis = [];
-            Object.keys(ACHIEVEMENTS).forEach(key => ACHIEVEMENTS[key].unlocked = false);
-
             document.getElementById('startBtn').disabled = false;
             document.getElementById('pauseBtn').disabled = true;
-            document.getElementById('pauseBtn').textContent = '⏸️ Pausar';
-
-            updateBoardUI();
-            updateStatsUI();
-            updateChartsUI();
-            updateMoveHistoryUI();
-            updateAchievementsUI();
+            updateUI();
         });
 
         document.getElementById('speedSlider').addEventListener('input', (e) => {
@@ -1298,118 +886,43 @@
             document.getElementById('speedValue').textContent = gameState.speed.toFixed(1) + 'x';
         });
 
-        // ========== INICIALIZAÇÃO ==========
+        // ========== INICIALIZAR ==========
         function initCharts() {
-            const evolutionCtx = document.getElementById('evolutionChart').getContext('2d');
-            gameState.charts.evolution = new Chart(evolutionCtx, {
+            const ctx1 = document.getElementById('evolutionChart').getContext('2d');
+            gameState.charts.evolution = new Chart(ctx1, {
                 type: 'line',
                 data: {
                     labels: [],
                     datasets: [
-                        {
-                            label: '♔ Brancas',
-                            borderColor: '#f59e0b',
-                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                            tension: 0.4,
-                            fill: true,
-                            data: [],
-                            pointRadius: 3
-                        },
-                        {
-                            label: '♚ Pretas',
-                            borderColor: '#667eea',
-                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                            tension: 0.4,
-                            fill: true,
-                            data: [],
-                            pointRadius: 3
-                        }
+                        { label: '♔', borderColor: '#f59e0b', data: [], tension: 0.3 },
+                        { label: '♚', borderColor: '#667eea', data: [], tension: 0.3 }
                     ]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: { display: true, labels: { color: '#aaa' } }
-                    },
-                    scales: {
-                        y: {
-                            min: 800,
-                            max: 1300,
-                            ticks: { color: '#aaa' },
-                            grid: { color: 'rgba(255, 255, 255, 0.05)' }
-                        },
-                        x: {
-                            ticks: { color: '#aaa' },
-                            grid: { color: 'rgba(255, 255, 255, 0.05)' }
-                        }
-                    }
-                }
+                options: { responsive: true, maintainAspectRatio: true }
             });
 
-            const resultsCtx = document.getElementById('resultsChart').getContext('2d');
-            gameState.charts.results = new Chart(resultsCtx, {
+            const ctx2 = document.getElementById('resultsChart').getContext('2d');
+            gameState.charts.results = new Chart(ctx2, {
                 type: 'doughnut',
                 data: {
-                    labels: ['⚪ Brancas', '⚫ Pretas', '🤝 Empates'],
-                    datasets: [{
-                        data: [0, 0, 0],
-                        backgroundColor: ['#f59e0b', '#667eea', '#10b981'],
-                        borderColor: '#1a1a2e',
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: { position: 'bottom', labels: { color: '#aaa' } }
-                    }
+                    labels: ['⚪', '⚫', '🤝'],
+                    datasets: [{ data: [0, 0, 0], backgroundColor: ['#f59e0b', '#667eea', '#10b981'] }]
                 }
             });
 
-            const qualityCtx = document.getElementById('moveQualityChart').getContext('2d');
-            gameState.charts.moveQuality = new Chart(qualityCtx, {
+            const ctx3 = document.getElementById('moveQualityChart').getContext('2d');
+            gameState.charts.quality = new Chart(ctx3, {
                 type: 'bar',
                 data: {
-                    labels: ['🔴 Blunder', '🟡 Impreciso', '🟣 Bom', '🟢 Melhor', '🔵 Genial'],
-                    datasets: [{
-                        label: 'Qualidade de Lances',
-                        data: [0, 0, 0, 0, 0],
-                        backgroundColor: ['#ef4444', '#f59e0b', '#8b5cf6', '#10b981', '#3b82f6'],
-                        borderRadius: 8
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: { labels: { color: '#aaa' } }
-                    },
-                    scales: {
-                        x: {
-                            ticks: { color: '#aaa' },
-                            grid: { color: 'rgba(255, 255, 255, 0.05)' }
-                        },
-                        y: {
-                            ticks: { color: '#aaa' }
-                        }
-                    }
+                    labels: ['Gen0', 'Gen1', 'Gen2'],
+                    datasets: [{ label: 'Progresso', data: [0, 0, 0], backgroundColor: '#667eea' }]
                 }
             });
-        }
-
-        function initBoard() {
-            gameState.currentGame = new ChessEngine();
-            updateBoardUI();
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             initCharts();
-            initBoard();
-            updateStatsUI();
-            updateAchievementsUI();
+            updateUI();
         });
     </script>
 </body>
