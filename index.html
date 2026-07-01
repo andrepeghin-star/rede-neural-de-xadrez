@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🧠 Rede Neural de Xadrez</title>
+    <title>🧠 Rede Neural de Xadrez - 2 IAs Aprendendo</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -12,123 +13,426 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            color: #333;
             padding: 20px;
         }
 
         .container {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            text-align: center;
+            max-width: 1600px;
+            margin: 0 auto;
         }
 
-        h1 {
+        header {
+            text-align: center;
             color: white;
             margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        header h1 {
             font-size: 2.5em;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .controls-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .speed-control label {
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        #speedSlider {
+            width: 150px;
+            cursor: pointer;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
         }
 
         .board-container {
-            display: inline-block;
-            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
         }
 
         .chessboard {
             display: inline-grid;
-            grid-template-columns: repeat(8, 60px);
+            grid-template-columns: repeat(8, 50px);
             gap: 0;
             border: 3px solid #333;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            margin: 15px 0;
             background: #333;
         }
 
         .square {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
-            font-weight: bold;
+            font-size: 28px;
             cursor: pointer;
             user-select: none;
             transition: all 0.2s ease;
         }
 
-        .square:hover {
-            opacity: 0.8;
-            transform: scale(0.95);
-        }
-
-        .light {
+        .square.light {
             background-color: #f0d9b5;
-            color: #333;
         }
 
-        .dark {
+        .square.dark {
             background-color: #b58863;
-            color: #333;
         }
 
-        .stats {
+        .square.highlight {
+            background-color: #baca44 !important;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .stats-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            margin-top: 30px;
-            font-size: 1.1em;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            text-align: center;
         }
 
-        .stat-row {
-            margin: 10px 0;
-        }
-
-        .stat-label {
-            font-weight: bold;
-            display: inline-block;
-            width: 150px;
-            text-align: right;
-            margin-right: 10px;
+        .stat-box h3 {
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            opacity: 0.9;
         }
 
         .stat-value {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 5px 15px;
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .ai-status {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .ai-info {
+            background: #f5f5f5;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .ai-info.black {
+            border-left-color: #333;
+        }
+
+        .ai-info h4 {
+            margin-bottom: 5px;
+            color: #667eea;
+        }
+
+        .ai-info.black h4 {
+            color: #333;
+        }
+
+        .ai-rating {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .ai-rating.black {
+            color: #333;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .chart-container h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .history-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .history-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .game-status {
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 15px 0;
+        }
+
+        .thinking {
+            animation: thinking 1.5s infinite;
+        }
+
+        @keyframes thinking {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .ai-label {
+            font-weight: bold;
+            margin: 10px 0;
+            padding: 10px;
             border-radius: 5px;
-            display: inline-block;
-            min-width: 100px;
+        }
+
+        .ai-label.white {
+            background: #f0d9b5;
+            color: #333;
+        }
+
+        .ai-label.black {
+            background: #b58863;
+            color: white;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🧠 Rede Neural de Xadrez</h1>
-        
-        <div class="board-container">
-            <div class="chessboard" id="chessboard"></div>
+        <header>
+            <h1>🧠 Rede Neural de Xadrez</h1>
+            <p>Observando 2 IAs Aprendendo e Disputando</p>
+        </header>
+
+        <div class="controls-section">
+            <button id="startBtn" class="btn btn-primary">▶️ Iniciar</button>
+            <button id="pauseBtn" class="btn btn-primary" disabled>⏸️ Pausar</button>
+            <button id="resetBtn" class="btn btn-danger">🔄 Reiniciar</button>
+            
+            <div class="speed-control">
+                <label for="speedSlider">Velocidade: <span id="speedValue">1.0</span>x</label>
+                <input type="range" id="speedSlider" min="0.5" max="3" step="0.5" value="1">
+            </div>
+
+            <div style="margin-left: auto; font-weight: bold;">
+                Geração: <span id="generation" style="color: #667eea; font-size: 1.2em;">0</span>
+                | Partidas: <span id="totalGames" style="color: #667eea; font-size: 1.2em;">0</span>
+            </div>
         </div>
 
-        <div class="stats">
-            <div class="stat-row">
-                <span class="stat-label">Total de Casas:</span>
-                <span class="stat-value" id="totalSquares">64</span>
+        <div class="main-grid">
+            <!-- Tabuleiro -->
+            <div class="board-container">
+                <h2>♟️ Tabuleiro Atual</h2>
+                <div class="ai-label white">♔ IA Brancas</div>
+                <div class="chessboard" id="chessboard"></div>
+                <div class="ai-label black">♚ IA Pretas</div>
+                <div class="game-status" id="gameStatus">Aguardando início...</div>
             </div>
-            <div class="stat-row">
-                <span class="stat-label">Status:</span>
-                <span class="stat-value" id="status">Tabuleiro Carregado ✅</span>
+
+            <!-- Estatísticas e Info -->
+            <div class="stats-container">
+                <h2>📊 Estatísticas</h2>
+                
+                <div class="stat-box">
+                    <h3>Total de Partidas</h3>
+                    <p class="stat-value" id="totalGamesStats">0</p>
+                </div>
+
+                <div class="ai-status">
+                    <div class="ai-info">
+                        <h4>♔ IA Brancas</h4>
+                        <div style="margin-top: 8px;">
+                            <div>Vitórias: <strong id="whiteWins">0</strong></div>
+                            <div>Rating Elo:</div>
+                            <div class="ai-rating" id="whiteRating">1000</div>
+                        </div>
+                    </div>
+                    <div class="ai-info black">
+                        <h4>♚ IA Pretas</h4>
+                        <div style="margin-top: 8px;">
+                            <div>Vitórias: <strong id="blackWins">0</strong></div>
+                            <div>Rating Elo:</div>
+                            <div class="ai-rating black" id="blackRating">1000</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-box" style="margin-top: 15px;">
+                    <h3>Empates</h3>
+                    <p class="stat-value" id="draws">0</p>
+                </div>
+
+                <div class="stat-box">
+                    <h3>Taxa de Vitória (Brancas)</h3>
+                    <p class="stat-value" id="winRate">0%</p>
+                </div>
             </div>
+        </div>
+
+        <!-- Gráficos -->
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h3>📈 Evolução de Vitórias</h3>
+                <canvas id="winsChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h3>🏆 Ratings Elo ao Longo do Tempo</h3>
+                <canvas id="ratingChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Histórico -->
+        <div class="history-section">
+            <h2>📝 Últimas 10 Partidas</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Resultado</th>
+                        <th>Rating Brancas</th>
+                        <th>Rating Pretas</th>
+                        <th>Geração</th>
+                    </tr>
+                </thead>
+                <tbody id="historyBody">
+                    <tr><td colspan="5">Nenhuma partida ainda...</td></tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
     <script>
-        // Configuração do tabuleiro
-        const pieces = [
+        // Inicialização do sistema
+        const gameState = {
+            board: [],
+            generation: 0,
+            totalGames: 0,
+            whiteRating: 1000,
+            blackRating: 1000,
+            whiteWins: 0,
+            blackWins: 0,
+            draws: 0,
+            isRunning: false,
+            gameHistory: [],
+            winsHistory: [],
+            ratingsHistory: [],
+            speed: 1
+        };
+
+        // Peças iniciais
+        const initialBoard = [
             ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖'],
             ['♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙'],
             [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
@@ -139,38 +443,346 @@
             ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜']
         ];
 
-        const board = document.getElementById('chessboard');
-        
-        // Criar as 64 casas
-        for (let row = 0; row < 8; row++) {
-            for (let col = 0; col < 8; col++) {
-                const square = document.createElement('div');
-                square.className = 'square';
-                
-                // Determinar cor (padrão xadrez)
-                if ((row + col) % 2 === 0) {
-                    square.classList.add('light');
-                } else {
-                    square.classList.add('dark');
+        let winsChart = null;
+        let ratingChart = null;
+
+        function initBoard() {
+            gameState.board = JSON.parse(JSON.stringify(initialBoard));
+        }
+
+        function renderBoard() {
+            const boardElement = document.getElementById('chessboard');
+            boardElement.innerHTML = '';
+
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    const square = document.createElement('div');
+                    square.className = 'square ' + ((row + col) % 2 === 0 ? 'light' : 'dark');
+                    square.textContent = gameState.board[row][col];
+                    boardElement.appendChild(square);
                 }
-                
-                // Adicionar peça
-                square.textContent = pieces[row][col];
-                
-                // Adicionar data attributes para referência
-                square.setAttribute('data-row', row);
-                square.setAttribute('data-col', col);
-                
-                // Event listener
-                square.addEventListener('click', function() {
-                    console.log(`Clicou em: linha ${row}, coluna ${col}`);
-                });
-                
-                board.appendChild(square);
             }
         }
 
-        console.log('✅ Tabuleiro de Xadrez Carregado com Sucesso!');
+        function updateStats() {
+            document.getElementById('generation').textContent = gameState.generation;
+            document.getElementById('totalGames').textContent = gameState.totalGames;
+            document.getElementById('totalGamesStats').textContent = gameState.totalGames;
+            document.getElementById('whiteRating').textContent = Math.round(gameState.whiteRating);
+            document.getElementById('blackRating').textContent = Math.round(gameState.blackRating);
+            document.getElementById('whiteWins').textContent = gameState.whiteWins;
+            document.getElementById('blackWins').textContent = gameState.blackWins;
+            document.getElementById('draws').textContent = gameState.draws;
+
+            const winRate = gameState.totalGames === 0 ? 0 : 
+                (gameState.whiteWins / gameState.totalGames * 100).toFixed(1);
+            document.getElementById('winRate').textContent = winRate + '%';
+        }
+
+        async function simulateMove() {
+            // Simular pensamento
+            document.getElementById('gameStatus').innerHTML = '🤔 IA pensando...';
+            document.getElementById('gameStatus').classList.add('thinking');
+            
+            await new Promise(resolve => setTimeout(resolve, 1000 / gameState.speed));
+            
+            // Movimento aleatório simulado
+            const fromRow = Math.floor(Math.random() * 8);
+            const fromCol = Math.floor(Math.random() * 8);
+            const toRow = Math.floor(Math.random() * 8);
+            const toCol = Math.floor(Math.random() * 8);
+
+            // Mover peça (simulado)
+            if (gameState.board[fromRow][fromCol] !== ' ') {
+                const temp = gameState.board[toRow][toCol];
+                gameState.board[toRow][toCol] = gameState.board[fromRow][fromCol];
+                gameState.board[fromRow][fromCol] = temp;
+            }
+
+            renderBoard();
+        }
+
+        async function playGame() {
+            initBoard();
+            renderBoard();
+            
+            let moves = 0;
+            const maxMoves = 50 + Math.floor(Math.random() * 50);
+
+            while (moves < maxMoves && gameState.isRunning) {
+                document.getElementById('gameStatus').innerHTML = '♔ Turno das Brancas';
+                document.getElementById('gameStatus').classList.remove('thinking');
+                await simulateMove();
+                moves++;
+                if (!gameState.isRunning) break;
+
+                await new Promise(resolve => setTimeout(resolve, 300 / gameState.speed));
+
+                document.getElementById('gameStatus').innerHTML = '♚ Turno das Pretas';
+                document.getElementById('gameStatus').classList.remove('thinking');
+                await simulateMove();
+                moves++;
+                if (!gameState.isRunning) break;
+
+                await new Promise(resolve => setTimeout(resolve, 300 / gameState.speed));
+            }
+
+            // Determinar resultado
+            const result = Math.random();
+            let resultText = '';
+            
+            if (result < 0.33) {
+                gameState.whiteWins++;
+                resultText = '♔ Brancas Venceram!';
+                updateRating(25, -20);
+            } else if (result < 0.66) {
+                gameState.blackWins++;
+                resultText = '♚ Pretas Venceram!';
+                updateRating(-20, 25);
+            } else {
+                gameState.draws++;
+                resultText = '🤝 Empate!';
+                updateRating(10, 10);
+            }
+
+            document.getElementById('gameStatus').innerHTML = resultText;
+            document.getElementById('gameStatus').classList.remove('thinking');
+
+            // Salvar no histórico
+            gameState.gameHistory.unshift({
+                resultado: resultText,
+                whiteRating: Math.round(gameState.whiteRating),
+                blackRating: Math.round(gameState.blackRating),
+                generation: gameState.generation
+            });
+            if (gameState.gameHistory.length > 10) gameState.gameHistory.pop();
+
+            updateHistory();
+            gameState.totalGames++;
+            gameState.generation++;
+
+            updateStats();
+            updateCharts();
+
+            // Próxima partida
+            if (gameState.isRunning) {
+                await new Promise(resolve => setTimeout(resolve, 2000 / gameState.speed));
+                await playGame();
+            }
+        }
+
+        function updateRating(whiteChange, blackChange) {
+            gameState.whiteRating += whiteChange;
+            gameState.blackRating += blackChange;
+            
+            gameState.ratingsHistory.push({
+                white: Math.round(gameState.whiteRating),
+                black: Math.round(gameState.blackRating)
+            });
+        }
+
+        function updateHistory() {
+            const tbody = document.getElementById('historyBody');
+            tbody.innerHTML = '';
+
+            gameState.gameHistory.forEach((game, idx) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${gameState.totalGames - idx}</td>
+                    <td>${game.resultado}</td>
+                    <td>${game.whiteRating}</td>
+                    <td>${game.blackRating}</td>
+                    <td>${game.generation}</td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            if (tbody.children.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5">Nenhuma partida ainda...</td></tr>';
+            }
+        }
+
+        function updateCharts() {
+            // Gráfico de Vitórias
+            if (winsChart) {
+                winsChart.data.labels.push('Partida ' + gameState.totalGames);
+                winsChart.data.datasets[0].data.push(gameState.whiteWins);
+                winsChart.data.datasets[1].data.push(gameState.blackWins);
+                winsChart.data.datasets[2].data.push(gameState.draws);
+                
+                if (winsChart.data.labels.length > 20) {
+                    winsChart.data.labels.shift();
+                    winsChart.data.datasets.forEach(ds => ds.data.shift());
+                }
+                winsChart.update();
+            }
+
+            // Gráfico de Ratings
+            if (ratingChart) {
+                ratingChart.data.labels.push('Partida ' + gameState.totalGames);
+                ratingChart.data.datasets[0].data.push(gameState.whiteRating);
+                ratingChart.data.datasets[1].data.push(gameState.blackRating);
+                
+                if (ratingChart.data.labels.length > 20) {
+                    ratingChart.data.labels.shift();
+                    ratingChart.data.datasets.forEach(ds => ds.data.shift());
+                }
+                ratingChart.update();
+            }
+        }
+
+        function initCharts() {
+            // Gráfico de Vitórias
+            const winsCtx = document.getElementById('winsChart').getContext('2d');
+            winsChart = new Chart(winsCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: '♔ Vitórias Brancas',
+                            data: [],
+                            borderColor: '#f0d9b5',
+                            backgroundColor: 'rgba(240, 217, 181, 0.1)',
+                            borderWidth: 2,
+                            fill: true
+                        },
+                        {
+                            label: '♚ Vitórias Pretas',
+                            data: [],
+                            borderColor: '#b58863',
+                            backgroundColor: 'rgba(181, 136, 99, 0.1)',
+                            borderWidth: 2,
+                            fill: true
+                        },
+                        {
+                            label: '🤝 Empates',
+                            data: [],
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            borderWidth: 2,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de Ratings
+            const ratingCtx = document.getElementById('ratingChart').getContext('2d');
+            ratingChart = new Chart(ratingCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: '♔ Rating Brancas',
+                            data: [],
+                            borderColor: '#f0d9b5',
+                            backgroundColor: 'rgba(240, 217, 181, 0.1)',
+                            borderWidth: 2,
+                            fill: true
+                        },
+                        {
+                            label: '♚ Rating Pretas',
+                            data: [],
+                            borderColor: '#b58863',
+                            backgroundColor: 'rgba(181, 136, 99, 0.1)',
+                            borderWidth: 2,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 800,
+                            max: 1200
+                        }
+                    }
+                }
+            });
+        }
+
+        // Event Listeners
+        document.getElementById('startBtn').addEventListener('click', () => {
+            gameState.isRunning = true;
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('pauseBtn').disabled = false;
+            playGame();
+        });
+
+        document.getElementById('pauseBtn').addEventListener('click', () => {
+            gameState.isRunning = false;
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('pauseBtn').disabled = true;
+            document.getElementById('gameStatus').innerHTML = '⏸️ Pausado';
+            document.getElementById('gameStatus').classList.remove('thinking');
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            gameState.isRunning = false;
+            gameState.generation = 0;
+            gameState.totalGames = 0;
+            gameState.whiteRating = 1000;
+            gameState.blackRating = 1000;
+            gameState.whiteWins = 0;
+            gameState.blackWins = 0;
+            gameState.draws = 0;
+            gameState.gameHistory = [];
+            gameState.winsHistory = [];
+            gameState.ratingsHistory = [];
+
+            initBoard();
+            renderBoard();
+            updateStats();
+            updateHistory();
+
+            winsChart.data.labels = [];
+            winsChart.data.datasets.forEach(ds => ds.data = []);
+            winsChart.update();
+
+            ratingChart.data.labels = [];
+            ratingChart.data.datasets.forEach(ds => ds.data = []);
+            ratingChart.update();
+
+            document.getElementById('gameStatus').innerHTML = 'Aguardando início...';
+            document.getElementById('gameStatus').classList.remove('thinking');
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('pauseBtn').disabled = true;
+        });
+
+        document.getElementById('speedSlider').addEventListener('change', (e) => {
+            gameState.speed = parseFloat(e.target.value);
+            document.getElementById('speedValue').textContent = gameState.speed.toFixed(1);
+        });
+
+        // Inicialização
+        window.addEventListener('load', () => {
+            initBoard();
+            renderBoard();
+            initCharts();
+            updateStats();
+        });
     </script>
 </body>
 </html>
